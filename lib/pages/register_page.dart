@@ -1,6 +1,9 @@
-import 'package:chat/widgets/custom_blue_botton.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import 'package:chat/helpers/show_alert.dart';
+import 'package:chat/widgets/custom_blue_botton.dart';
+import 'package:chat/services/auth_service.dart';
 import 'package:chat/widgets/logo.dart';
 import 'package:chat/widgets/labels.dart';
 import 'package:chat/widgets/custom_input.dart';
@@ -49,6 +52,8 @@ class __FormState extends State<_Form> {
 
   @override
   Widget build(BuildContext context) {
+    final authService = Provider.of<AuthService>(context);
+    
     return Container(
       margin: EdgeInsets.only(top: 40),
       padding: EdgeInsets.symmetric(horizontal: 50),
@@ -76,8 +81,25 @@ class __FormState extends State<_Form> {
           SizedBox(height: 10),
           CustomBlueBotton(
             text: "Registrarme",
-            onPressed: () {
-              print(emailController.text);
+            onPressed: authService.authenticating ? null : () async {
+              FocusScope.of(context).unfocus();
+
+              final resultRegister = await authService.register(
+                fullName: fullNameController.text.trim().toUpperCase(),
+                email: emailController.text.trim().toLowerCase(), 
+                password: passwordController.text.trim()
+              );
+
+              if(resultRegister == true) {
+
+                Navigator.pushReplacementNamed(context, "users");
+              } else {
+                showAlert(
+                  context: context, 
+                  title: "Registro incorrecto", 
+                  subtitle: resultRegister
+                );
+              }
             },
           )
         ],

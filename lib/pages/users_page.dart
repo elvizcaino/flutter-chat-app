@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
 
-import 'package:chat/models/user.dart';
+import 'package:chat/services/auth_service.dart';
+import 'package:chat/models/user_model.dart';
 
 
 class UsersPage extends StatefulWidget {
@@ -13,22 +15,27 @@ class UsersPage extends StatefulWidget {
 class _UsersPageState extends State<UsersPage> {
   RefreshController _refreshController = RefreshController(initialRefresh: false);
   final users = [
-    User(uid: "1", fullName: "Elvis", email: "elvis@gmail.com", online: true),
-    User(uid: "2", fullName: "Isvel", email: "isvel@gmail.com", online: false),
-    User(uid: "3", fullName: "Deivys", email: "deivys@gmail.com", online: false),
-    User(uid: "4", fullName: "Evelina", email: "evelina@gmail.com", online: true),
+    UserModel(uid: "1", fullName: "Elvis", email: "elvis@gmail.com", online: true),
+    UserModel(uid: "2", fullName: "Isvel", email: "isvel@gmail.com", online: false),
+    UserModel(uid: "3", fullName: "Deivys", email: "deivys@gmail.com", online: false),
+    UserModel(uid: "4", fullName: "Evelina", email: "evelina@gmail.com", online: true),
   ];
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<AuthService>(context).user;
+
     return Scaffold(
       appBar: AppBar(
-        title: Text("Mi Nombre", style: TextStyle(color: Colors.black54)),
+        title: Text(user.fullName, style: TextStyle(color: Colors.black54)),
         elevation: 1,
         backgroundColor: Colors.white,
         leading: IconButton(
-          icon: Icon(Icons.exit_to_app, color: Colors.black54,),
-          onPressed: () {},
+          icon: Icon(Icons.exit_to_app, color: Colors.black87,),
+          onPressed: () {
+            Navigator.pushReplacementNamed(context, "login");
+            AuthService.deleteToken();
+          },
         ),
         actions: [
           Container(
@@ -59,7 +66,7 @@ class _UsersPageState extends State<UsersPage> {
     );
   }
 
-  ListTile _userListTile(User user) {
+  ListTile _userListTile(UserModel user) {
     return ListTile(
         title: Text(user.fullName),
         subtitle: Text(user.email),
