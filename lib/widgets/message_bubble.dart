@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'package:chat/services/auth_service.dart';
 
 class MessageBubble extends StatelessWidget {
   final String text;
@@ -14,6 +17,8 @@ class MessageBubble extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    
+
     return FadeTransition(
       opacity: animationController,
       child: SizeTransition(
@@ -22,14 +27,16 @@ class MessageBubble extends StatelessWidget {
           curve: Curves.easeOut
         ),
         child: Container(
-          child: _bubble(this.uid)
+          child: _bubble(context, this.uid)
         ),
       ),
     );
   }
 
-  Widget _bubble(String uid) {
-    if(uid == "123") {
+  Widget _bubble(BuildContext context, String uid) {    
+    final authService = Provider.of<AuthService>(context, listen: false);
+
+    if(uid == authService.user.uid) {
       return Align(
         alignment: Alignment.centerRight,
         child: Container(

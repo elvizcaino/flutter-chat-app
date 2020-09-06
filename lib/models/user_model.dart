@@ -5,17 +5,17 @@
 import 'dart:convert';
 
 class UserModel {
+  bool online;
+  String fullName;
+  String email;
+  String uid;
+
   UserModel({
     this.online,
     this.fullName,
     this.email,
     this.uid,
   });
-
-  bool online;
-  String fullName;
-  String email;
-  String uid;
 
   factory UserModel.fromJson(Map<String, dynamic> json) => UserModel(
     online: json["online"],

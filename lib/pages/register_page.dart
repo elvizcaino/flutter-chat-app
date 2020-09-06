@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:chat/services/socket_service.dart';
 import 'package:chat/helpers/show_alert.dart';
 import 'package:chat/widgets/custom_blue_botton.dart';
 import 'package:chat/services/auth_service.dart';
@@ -53,6 +54,7 @@ class __FormState extends State<_Form> {
   @override
   Widget build(BuildContext context) {
     final authService = Provider.of<AuthService>(context);
+    final socketService = Provider.of<SocketService>(context);
     
     return Container(
       margin: EdgeInsets.only(top: 40),
@@ -91,7 +93,7 @@ class __FormState extends State<_Form> {
               );
 
               if(resultRegister == true) {
-
+                socketService.connect();
                 Navigator.pushReplacementNamed(context, "users");
               } else {
                 showAlert(
